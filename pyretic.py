@@ -50,8 +50,9 @@ def signal_handler(signal, frame):
     print '\n----starting pyretic shutdown------'
     # for thread in threading.enumerate():
     #     print (thread,thread.isAlive())
-    print "attempting to kill of_client"
-    of_client.kill()
+    if of_client:
+        print "attempting to kill of_client"
+        of_client.kill()
     # print "attempting get output of of_client:"
     # output = of_client.communicate()[0]
     # print output
@@ -196,6 +197,8 @@ def main():
         # other log file descriptor if necessary
         of_client = subprocess.Popen([python, 
                                       pox_exec,
+                                      'pyretic.modules.nicira',
+                                      '--convert-packet-in',
                                       'of_client.pox_client' ],
                                      stdout=sys.stdout,
                                      stderr=subprocess.STDOUT)
@@ -208,3 +211,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+

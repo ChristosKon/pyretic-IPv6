@@ -30,11 +30,13 @@
 
 import threading
 
-import pox.openflow.libopenflow_01 as of
-import pox.openflow.nicira as nx
+
 from pox.core import core
 from pox.lib import revent, addresses as packetaddr, packet as packetlib
-from pox.lib.packet.ethernet      import ethernet
+from pox.lib.packet.ethernet import ethernet
+from pox.lib.packet.ipv6 import ipv6
+import pox.openflow.libopenflow_01 as of
+import pox.openflow.nicira as nx
 from pox.lib.packet.ethernet      import LLDP_MULTICAST, NDP_MULTICAST
 from pox.lib.packet.lldp          import lldp, chassis_id, port_id, end_tlv
 from pox.lib.packet.lldp          import ttl, system_description
@@ -481,6 +483,9 @@ class POXClient(revent.EventMixin):
    
         self.send_to_pyretic(['switch','join',event.dpid,'END'])
 
+        # Turn on Nicira packet_ins
+        msg = nx.nx_packet_in_format()
+        event.connection.send(msg)
                         
     def _handle_ConnectionDown(self, event):
         assert event.dpid in self.switches
@@ -712,6 +717,13 @@ class POXClient(revent.EventMixin):
         self.send_to_pyretic(['link',originatorDPID, originatorPort, event.dpid, event.port])            
         return # Probably nobody else needs this event
 
+    def handle_ipv6(self,packet,event):
+
+        ip_packet = packet.next
+        print ("We reached here")
+        if isinstance(ip_packet, ipv6):
+            print("Yoohoo, an IPv6")
+
 
     def _handle_PacketIn(self, event):
         packet = event.parsed
@@ -719,7 +731,8 @@ class POXClient(revent.EventMixin):
             self.handle_lldp(packet,event)
             return
         elif packet.type == 0x86dd:  # IGNORE IPV6
-            return 
+            self.handle_ipv6(packet,event)
+            return
 
         if self.show_traces:
             self.packetno += 1
@@ -749,3 +762,4 @@ def launch():
 
     
     
+
