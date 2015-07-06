@@ -454,11 +454,11 @@ class Runtime(object):
                            self.default_cookie,
                            False))
         # Drop all IPv6 packets by default.
-        self.install_rule(({'switch':s, 'ethtype':IPV6_TYPE},
-                           TABLE_START_PRIORITY + 1,
-                           [],
-                           self.default_cookie,
-                           False))
+        #self.install_rule(({'switch':s, 'ethtype':IPV6_TYPE},
+         #                  TABLE_START_PRIORITY + 1,
+          #                 [],
+           #                self.default_cookie,
+            #               False))
 
     def install_classifier(self, classifier):
         """

@@ -197,7 +197,7 @@ def main():
         # other log file descriptor if necessary
         of_client = subprocess.Popen([python, 
                                       pox_exec,
-                                      'pyretic.modules.nicira',
+                                      'pox.openflow.nicira',
                                       '--convert-packet-in',
                                       'of_client.pox_client' ],
                                      stdout=sys.stdout,
