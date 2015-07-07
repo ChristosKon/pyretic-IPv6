@@ -310,7 +310,6 @@ def of_field(match="", pyretic_field="", validator=true_validator(), version="1.
 
             layer = self.protocol(ryu_pkt)
             if layer is None: return None
-            print ("In packet.py field_decode, layer: %s, field: %s " %(layer, field))
             return getattr(layer, field)
 
         def field_encode(self, pyretic_pkt):

@@ -111,7 +111,7 @@ class IPAddr(object):
         return self.to_bytes()
 
     def __repr__(self):
-        if socketnt.has_ipv6:
+        if socket.has_ipv6:
             return socket.inet_ntop(socket.AF_INET6,self.to_bytes())
         else:
             return socket.inet_ntop(socket.AF_INET,self.to_bytes())

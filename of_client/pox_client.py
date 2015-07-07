@@ -263,9 +263,7 @@ class POXClient(revent.EventMixin):
         serialized_msg = serialize(msg)
         try:
             with self.channel_lock:
-                print "Push to backend the serialized msg"
                 self.backend_channel.push(serialized_msg)
-                print "after backend_channel.push"
         except IndexError as e:
             print "ERROR PUSHING MESSAGE %s" % msg
             pass
@@ -461,7 +459,6 @@ class POXClient(revent.EventMixin):
 
     def _handle_ConnectionUp(self, event):
         assert event.dpid not in self.switches
-        print "In connectionup"
         self.switches[event.dpid] = {}
         self.switches[event.dpid]['connection'] = event.connection
         self.switches[event.dpid]['ports'] = {}
