@@ -37,7 +37,6 @@ BACKEND_PORT=41414
 TERM_CHAR='\n'
 
 def serialize(msg):
-    print "I am in pyretic/backend/comm.py/serialize"
     jsonable_msg = to_jsonable_format(msg)
     jsoned_msg = json.dumps(jsonable_msg)
     serialized_msg = jsoned_msg + TERM_CHAR
@@ -93,15 +92,10 @@ def bytelist2ascii(packet_dict):
 
 def ascii2bytelist(packet_dict):
     def convert(h,val):
-        print "I am in pyretic/backend/acsii2bytelist"
-        #if packet_dict.has_key("raw"):
-        #    lol = packet_dict["raw"]
-        #    print lol
         if h in ['srcmac','dstmac','srcip','dstip','raw']:
             return [ord(c) for c in val]
         else:
             return val
-    print { h : convert(h,val) for (h, val) in packet_dict.items()}
     return { h : convert(h,val) for (h, val) in packet_dict.items()}
 
 

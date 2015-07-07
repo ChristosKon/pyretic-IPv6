@@ -71,7 +71,6 @@ ethertype_packets = {
 
 def build_empty_packet(ethertype, proto=None):
     if ethertype:
-        print "In packet.py build_empty_packet"
         pkt = ethertype_packets[ethertype]
         if proto is not None and not callable(pkt): pkt = pkt[proto]
 
@@ -451,10 +450,10 @@ class EthType(object):
         except:
             return None
 
-@of_field("ipv6.srcip", "srcip", ether_validator(IPV6), version="1.0")
+@of_field("ipv6.src", "srcip", ether_validator(IPV6), version="1.0")
 class Ipv6SrcIp(object): pass
 
-@of_field("ipv6.dstip", "dstip", ether_validator(IPV6), version="1.0")
+@of_field("ipv6.dst", "dstip", ether_validator(IPV6), version="1.0")
 class Ipv6DstIp(object): pass
 
 @of_field("ipv4.src", "srcip", ether_validator(IPV4), version="1.0")

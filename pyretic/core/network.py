@@ -94,7 +94,7 @@ class IPAddr(object):
 
             # string encoding
             else:
-                b.frombytes(socket.inet_aton(ip))
+                b.frombytes(socket.inet_pton(socket.AF_INET6, ip))
 
             self.bits = b
 
@@ -111,8 +111,10 @@ class IPAddr(object):
         return self.to_bytes()
 
     def __repr__(self):
-        return socket.inet_ntoa(self.to_bytes())
-
+        if socketnt.has_ipv6:
+            return socket.inet_ntop(socket.AF_INET6,self.to_bytes())
+        else:
+            return socket.inet_ntop(socket.AF_INET,self.to_bytes())
     def __hash__(self):
         return hash(self.to_bytes())    
 

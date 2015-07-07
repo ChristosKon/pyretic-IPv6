@@ -79,7 +79,6 @@ class BackendChannel(asynchat.async_chat):
 
     def dict2OF(self,d):
         def convert(h,val):
-            print "I am in dict2OF"
             if h in ['srcmac','dstmac']:
                 return packetaddr.EthAddr(val)
             elif h in ['srcip','dstip']:
@@ -261,7 +260,6 @@ class POXClient(revent.EventMixin):
 
 
     def send_to_pyretic(self,msg):
-        print "In send to pyretic"
         serialized_msg = serialize(msg)
         try:
             with self.channel_lock:
@@ -308,7 +306,6 @@ class POXClient(revent.EventMixin):
         ### BUILD OF MATCH
         if 'ethtype' in pred and pred['ethtype']==0x86dd:
             match = nx.nx_match()
-            print "In build of match IPv6"
             if inport:
                 match.in_port = inport
             if 'ethtype' in pred:
@@ -503,7 +500,6 @@ class POXClient(revent.EventMixin):
 
     def of_match_to_dict(self, m):
         h = {}
-        print "In of match to dict"
         if not m.in_port is None:
             h["inport"] = m.in_port
         if not m.dl_src is None:
@@ -729,7 +725,6 @@ class POXClient(revent.EventMixin):
 
         ip_packet = packet.next
         if isinstance(ip_packet, ipv6):
-            print "Yoohoo, an IPv6"
             ipv6_src = ip_packet.srcip
             ipv6_dst = ip_packet.dstip
             ipv6_next_header = ip_packet.next_header_type
