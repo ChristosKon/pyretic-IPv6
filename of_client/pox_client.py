@@ -267,7 +267,7 @@ class POXClient(revent.EventMixin):
             with self.channel_lock:
                 print "Push to backend the serialized msg"
                 self.backend_channel.push(serialized_msg)
-                print "yolo"
+                print "after backend_channel.push"
         except IndexError as e:
             print "ERROR PUSHING MESSAGE %s" % msg
             pass
@@ -306,9 +306,9 @@ class POXClient(revent.EventMixin):
 
     def build_of_match(self,switch,inport,pred):
         ### BUILD OF MATCH
-        print "In build of match"
         if 'ethtype' in pred and pred['ethtype']==0x86dd:
             match = nx.nx_match()
+            print "In build of match IPv6"
             if inport:
                 match.in_port = inport
             if 'ethtype' in pred:
@@ -730,6 +730,13 @@ class POXClient(revent.EventMixin):
         ip_packet = packet.next
         if isinstance(ip_packet, ipv6):
             print "Yoohoo, an IPv6"
+            ipv6_src = ip_packet.srcip
+            ipv6_dst = ip_packet.dstip
+            ipv6_next_header = ip_packet.next_header_type
+            print("IPv6_src = %s, IPv6_dst = %s, Next_header = %s" % (ipv6_src, ipv6_dst, ipv6_next_header))
+            if ipv6_next_header == 58:
+                icmpv6_type = ip_packet.next.type
+                print("My icmpv6 type = %s" % (icmpv6_type))
 
         received = self.packet_from_network(switch=event.dpid, inport=event.ofp.in_port, raw=event.data)
         self.send_to_pyretic(['packet',received])

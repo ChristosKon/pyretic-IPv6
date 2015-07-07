@@ -71,6 +71,7 @@ ethertype_packets = {
 
 def build_empty_packet(ethertype, proto=None):
     if ethertype:
+        print "In packet.py build_empty_packet"
         pkt = ethertype_packets[ethertype]
         if proto is not None and not callable(pkt): pkt = pkt[proto]
 
@@ -310,7 +311,7 @@ def of_field(match="", pyretic_field="", validator=true_validator(), version="1.
 
             layer = self.protocol(ryu_pkt)
             if layer is None: return None
-
+            print ("In packet.py field_decode, layer: %s, field: %s " %(layer, field))
             return getattr(layer, field)
 
         def field_encode(self, pyretic_pkt):
