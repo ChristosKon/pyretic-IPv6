@@ -32,6 +32,7 @@ import socket
 import struct
 from bitarray import bitarray
 import networkx as nx
+from pox.lib.packet.ipv6 import ipv6
 
 from pyretic.core import util
 
@@ -91,11 +92,12 @@ class IPAddr(object):
             # byte encoding
             if len(ip) == 4:
                 b.frombytes(ip)
-
             # string encoding
             else:
-                b.frombytes(socket.inet_pton(socket.AF_INET6, ip))
-
+                try:
+                    b.frombytes(socket.inet_pton(socket.AF_INET6, ip))
+                except:
+                    b.frombytes(socket.inet_pton(socket.AF_INET, ip))
             self.bits = b
 
     def to_bits(self):
@@ -111,9 +113,9 @@ class IPAddr(object):
         return self.to_bytes()
 
     def __repr__(self):
-        if socket.has_ipv6:
+        try:
             return socket.inet_ntop(socket.AF_INET6,self.to_bytes())
-        else:
+        except:
             return socket.inet_ntop(socket.AF_INET,self.to_bytes())
     def __hash__(self):
         return hash(self.to_bytes())    

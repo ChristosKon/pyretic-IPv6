@@ -308,32 +308,52 @@ class POXClient(revent.EventMixin):
                 match.in_port = inport
             if 'ethtype' in pred:
                 match.eth_type = pred['ethtype']
+            if 'srcmac' in pred:
+                match.eth_src = pred['srcmac']
+            if 'dstmac' in pred:
+                match.eth_dst = pred['dstmac']
+            if 'vlan_id' in pred:
+                match.dl_vlan = pred['vlan_id']
+            if 'vlan_pcp' in pred:
+                match.dl_vlan_pcp = pred['vlan_pcp']
+            if 'protocol' in pred:
+                match.ip_proto = pred['protocol']
+            if 'srcip' in pred:
+                match.ipv6_src = (pred['srcip'])
+            if 'dstip' in pred:
+                match.ipv6_dst = (pred['dstip'])
+            if 'tos' in pred:
+                match.ip_tos = pred['tos']
+            #Add udp_src and udp_dst cases in the future
+            if 'srcport' in pred:
+                match.tcp_src = pred['srcport']
+            if 'dstport' in pred:
+                match.tcp_dst = pred['dstport']
         else:
             match = of.ofp_match()
             match.in_port = inport
             if 'ethtype' in pred:
                 match.dl_type = pred['ethtype']
-
-        if 'srcmac' in pred:
-            match.dl_src = pred['srcmac']
-        if 'dstmac' in pred:
-            match.dl_dst = pred['dstmac']
-        if 'vlan_id' in pred:
-            match.dl_vlan = pred['vlan_id']
-        if 'vlan_pcp' in pred:
-            match.dl_vlan_pcp = pred['vlan_pcp']
-        if 'protocol' in pred:
-            match.nw_proto = pred['protocol']
-        if 'srcip' in pred:
-            match.set_nw_src(pred['srcip'])
-        if 'dstip' in pred:
-            match.set_nw_dst(pred['dstip'])
-        if 'tos' in pred:
-            match.nw_tos = pred['tos']
-        if 'srcport' in pred:
-            match.tp_src = pred['srcport']
-        if 'dstport' in pred:
-            match.tp_dst = pred['dstport']
+            if 'srcmac' in pred:
+                match.dl_src = pred['srcmac']
+            if 'dstmac' in pred:
+                match.dl_dst = pred['dstmac']
+            if 'vlan_id' in pred:
+                match.dl_vlan = pred['vlan_id']
+            if 'vlan_pcp' in pred:
+                match.dl_vlan_pcp = pred['vlan_pcp']
+            if 'protocol' in pred:
+                match.nw_proto = pred['protocol']
+            if 'srcip' in pred:
+                match.set_nw_src(pred['srcip'])
+            if 'dstip' in pred:
+                match.set_nw_dst(pred['dstip'])
+            if 'tos' in pred:
+                match.nw_tos = pred['tos']
+            if 'srcport' in pred:
+                match.tp_src = pred['srcport']
+            if 'dstport' in pred:
+                match.tp_dst = pred['dstport']
         return match
 
     def build_of_actions(self,inport,action_list):
@@ -720,28 +740,29 @@ class POXClient(revent.EventMixin):
 
     def handle_ipv6(self,packet,event):
 
-        ip_packet = packet.next
-        if isinstance(ip_packet, ipv6):
-            ipv6_src = ip_packet.srcip
-            ipv6_dst = ip_packet.dstip
-            ipv6_next_header = ip_packet.next_header_type
-            print("IPv6_src = %s, IPv6_dst = %s, Next_header = %s" % (ipv6_src, ipv6_dst, ipv6_next_header))
-            if ipv6_next_header == 58:
-                icmpv6_type = ip_packet.next.type
-                print("My icmpv6 type = %s" % (icmpv6_type))
+        #ip_packet = packet.next
+        #if isinstance(ip_packet, ipv6):
+          #  ipv6_src = ip_packet.srcip
+          #  ipv6_dst = ip_packet.dstip
+          #  ipv6_next_header = ip_packet.next_header_type
+          #  print("IPv6_src = %s, IPv6_dst = %s, Next_header = %s" % (ipv6_src, ipv6_dst, ipv6_next_header))
+           # if ipv6_next_header == 58:
+            #    icmpv6_type = ip_packet.next.type
+           #     print("My icmpv6 type = %s" % (icmpv6_type))
 
         received = self.packet_from_network(switch=event.dpid, inport=event.ofp.in_port, raw=event.data)
         self.send_to_pyretic(['packet',received])
 
     def _handle_PacketIn(self, event):
+        print "PacketIn"
         packet = event.parsed
-        print ("Packet in with %s", packet.type)
+        #print ("Packet in with %s", packet.type)
         if packet.type == ethernet.LLDP_TYPE: 
             self.handle_lldp(packet,event)
             print "It handles lldp"
             return
         elif packet.type == 0x86dd:
-            print "It handles ipv6"
+         #   print "It handles ipv6"
             self.handle_ipv6(packet,event)
             return
 
@@ -754,7 +775,7 @@ class POXClient(revent.EventMixin):
             print "data\t%s" % packetlib.ethernet(event.data)
             print "dpid\t%s" % event.dpid
             print
-
+        print "I am here too"
         received = self.packet_from_network(switch=event.dpid, inport=event.ofp.in_port, raw=event.data)
         self.send_to_pyretic(['packet',received])
         
