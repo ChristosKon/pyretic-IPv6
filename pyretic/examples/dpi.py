@@ -90,5 +90,5 @@ def dpi():
 ### Main ###
 
 def main():
-    return (match(srcmac=EthAddr('da:29:d6:72:2c:72')) >> dpi()) + flood()
+    return (match(srcmac=EthAddr('3a:c3:ae:16:29:d3')) >> dpi()) + flood()
 

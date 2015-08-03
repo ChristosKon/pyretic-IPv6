@@ -2,6 +2,7 @@ from pyretic.lib.corelib import *
 from pyretic.lib.std import *
 from pyretic.lib.query import *
 from pox.lib.packet import *
+from pyretic.examples.icmpv6 import pack
 
 h2_ip = IPAddr('fe80::200:ff:fe00:2')
 multicast_h2_ip = IPAddr('ff02::1:ff00:2')
@@ -16,4 +17,5 @@ def only_from_h2():
     )
 
 def main():
+
     return only_from_h2()

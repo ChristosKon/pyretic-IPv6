@@ -6,11 +6,10 @@ from pox.lib.packet import *
 
 def check_icmpv6(pkt):
 
-    #print pkt.header
+    print pkt
+    print "------------------------------------"
     srcipv6 = pkt.header['srcip']
     print srcipv6
-
-
 
     raw_bytes = [ord(c) for c in pkt['raw']]
     #print "ethernet payload is %d" % pkt['payload_len']

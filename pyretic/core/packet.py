@@ -18,9 +18,10 @@ ARP  = 0x0806
 ICMP_PROTO = 1
 TCP_PROTO  = 6
 UDP_PROTO  = 17
+ICMPV6_PROTO = 58
 
 ##################################################
-# EMPTY TEMPLATE PACKETS FOR DIFFERENT PROTCOLS 
+# EMPTY TEMPLATE PACKETS FOR DIFFERENT PROTOCOLS
 ##################################################
 def arp_packet_gen():
     pkt = packet.Packet()
@@ -36,19 +37,36 @@ def ipv6_packet_gen():
 
     return pkt
 
+def icmpv6_packet_gen():
+    pkt = packet.Packet()
+    pkt.protocols.append(ethernet.ethernet("ff:ff:ff:ff:ff:ff", "ff:ff:ff:ff:ff:ff", IPV6))
+    pkt.protocols.append(ipv6.ipv6(proto=ICMPV6_PROTO))
+    pkt.protocols.append(icmpv6.icmpv6(0, 0, 0))
+
+
 def udp_packet_gen():
     pkt = packet.Packet()
-    pkt.protocols.append(ethernet.ethernet("ff:ff:ff:ff:ff:ff", "ff:ff:ff:ff:ff:ff", IPV4))
-    pkt.protocols.append(ipv4.ipv4(proto=UDP_PROTO))
-    pkt.protocols.append(udp.udp(0, 0))
+    if packet.ethernet.ethernet.ethertype == 0x86dd:
+        pkt.protocols.append(ethernet.ethernet("ff:ff:ff:ff:ff:ff", "ff:ff:ff:ff:ff:ff", IPV6))
+        pkt.protocols.append(ipv6.ipv6(proto=UDP_PROTO))
+        pkt.protocols.append(udp.udp(0, 0))
+    else:
+        pkt.protocols.append(ethernet.ethernet("ff:ff:ff:ff:ff:ff", "ff:ff:ff:ff:ff:ff", IPV4))
+        pkt.protocols.append(ipv4.ipv4(proto=UDP_PROTO))
+        pkt.protocols.append(udp.udp(0, 0))
 
     return pkt
 
 def tcp_packet_gen():
     pkt = packet.Packet()
-    pkt.protocols.append(ethernet.ethernet("ff:ff:ff:ff:ff:ff", "ff:ff:ff:ff:ff:ff", IPV4))
-    pkt.protocols.append(ipv4.ipv4(proto=TCP_PROTO))
-    pkt.protocols.append(tcp.tcp(0, 0, 0, 0, 0, 0, 0, 0, 0))
+    if packet.ethernet.ethernet.ethertype == 0x86dd:
+        pkt.protocols.append(ethernet.ethernet("ff:ff:ff:ff:ff:ff", "ff:ff:ff:ff:ff:ff", IPV6))
+        pkt.protocols.append(ipv6.ipv6(proto=TCP_PROTO))
+        pkt.protocols.append(tcp.tcp(0, 0, 0, 0, 0, 0, 0, 0, 0))
+    else:
+        pkt.protocols.append(ethernet.ethernet("ff:ff:ff:ff:ff:ff", "ff:ff:ff:ff:ff:ff", IPV4))
+        pkt.protocols.append(ipv4.ipv4(proto=TCP_PROTO))
+        pkt.protocols.append(tcp.tcp(0, 0, 0, 0, 0, 0, 0, 0, 0))
 
     return pkt
 def icmp_packet_gen():
@@ -65,7 +83,11 @@ ethertype_packets = {
         TCP_PROTO : tcp_packet_gen,
         UDP_PROTO : udp_packet_gen
     },
-    IPV6: ipv6_packet_gen,
+    IPV6: {
+        ICMPV6_PROTO: icmpv6_packet_gen,
+        TCP_PROTO : tcp_packet_gen,
+        UDP_PROTO : udp_packet_gen
+    },
     ARP: arp_packet_gen
 }
 
