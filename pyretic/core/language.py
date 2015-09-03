@@ -49,7 +49,7 @@ import copy
 NO_CACHE=False
 
 basic_headers = ["srcmac", "dstmac", "srcip", "dstip", "tos", "srcport", "dstport",
-                 "ethtype", "protocol"]
+                 "ethtype", "protocol", "nxt", "icmpv6_type"]
 tagging_headers = ["vlan_id", "vlan_pcp"]
 native_headers = basic_headers + tagging_headers
 location_headers = ["switch", "inport", "outport"]

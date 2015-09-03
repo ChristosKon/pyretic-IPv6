@@ -192,7 +192,10 @@ def string_to_IP(ip_str):
 
 def network_to_string(ip_net):
     """ Return a dotted quad IP address/subnet from an IPv4Network object. """
-    assert isinstance(ip_net, IPv4Network)
+    try :
+        assert isinstance(ip_net, IPv4Network)
+    except:
+        assert isinstance(ip_net, IPv6Network)
     if ip_net.prefixlen < 32:
         return str(ip_net.network) + '/' + str(ip_net.prefixlen)
     else:
