@@ -312,10 +312,10 @@ class POXClient(revent.EventMixin):
                 match.eth_src = pred['srcmac']
             if 'dstmac' in pred:
                 match.eth_dst = pred['dstmac']
-            #if 'vlan_id' in pred:
-            #    match.dl_vlan = pred['vlan_id']
-            #if 'vlan_pcp' in pred:
-            #    match.dl_vlan_pcp = pred['vlan_pcp']
+            if 'vlan_id' in pred:
+                match.dl_vlan = pred['vlan_id']
+            if 'vlan_pcp' in pred:
+                match.dl_vlan_pcp = pred['vlan_pcp']
             if 'protocol' in pred:
                 match.ip_proto = pred['protocol']
             if 'srcip' in pred:
@@ -324,10 +324,6 @@ class POXClient(revent.EventMixin):
                 match.ipv6_dst = (pred['dstip'])
             if 'tos' in pred:
                 match.ip_tos = pred['tos']
-            #if 'nxt' in pred:
-            #    match.nxt = pred['nxt']
-            #if 'icmpv6_type' in pred:
-            #    match.icmpv6_type = pred['icmpv6_type']
             #Add udp_src and udp_dst cases in the future
             if 'srcport' in pred:
                 match.tcp_src = pred['srcport']
@@ -765,7 +761,6 @@ class POXClient(revent.EventMixin):
         self.send_to_pyretic(['packet',received])
 
     def _handle_PacketIn(self, event):
-        print "PacketIn"
         packet = event.parsed
         #print ("Packet in with %s", packet.type)
         if packet.type == ethernet.LLDP_TYPE: 
