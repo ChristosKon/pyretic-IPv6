@@ -1208,13 +1208,15 @@ class Runtime(object):
         packet['inport'] = raw_pkt['inport']
         #print packet
         # hacky way
+        '''
         if packet['ethtype'] == 34525:
             raw_bytes = [ord(c) for c in packet['raw']]
             eth_payload_bytes = raw_bytes[packet['header_len']:]
             packet['nxt'] = eth_payload_bytes[6]
-            if eth_payload_bytes[6] == 58:
+            if eth_payload_bytes[6] == 58 or eth_payload_bytes[6] == 89:
                 packet['icmpv6_type'] = eth_payload_bytes[40]
                 print "icmpv6 type = %d" % eth_payload_bytes[40]
+        '''
         #print type(packet)
         def convert(h,val):
             if h in ['srcmac','dstmac']:
