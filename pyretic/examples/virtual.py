@@ -11,11 +11,11 @@ virtual_field(name="acl",values=["permit","deny","inspect"],type="string")
 
 def main():
     firewall_policy = (
-     (match(srcip=IPAddr("10.0.0.1")) 
+     (match(srcip=IPAddr("10.0.1.1"))
         >> modify(acl="permit")) +
-     (match(srcip=IPAddr("10.0.0.3")) 
+     (match(srcip=IPAddr("10.0.2.1"))
         >> modify(acl="inspect")) +
-     (match(srcip=IPAddr("10.0.0.2")) 
+     (match(srcip=IPAddr("10.0.0.2"))
         >> modify(acl="deny")))
 
     routing_policy  = (
