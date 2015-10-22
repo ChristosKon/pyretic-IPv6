@@ -586,7 +586,6 @@ class Packet(object):
                                     hashlib.md5(self.header[field]).hexdigest()))
         all_fields.remove(field)
         ### ANY ADDITIONAL FIELDS
-        #print self.header.keys()
         for field in sorted(all_fields):
             try:             
                 if self.header[field]:

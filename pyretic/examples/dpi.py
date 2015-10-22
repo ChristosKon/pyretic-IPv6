@@ -90,5 +90,5 @@ def dpi():
 ### Main ###
 
 def main():
-    return (match(icmpv6_type=135) >> dpi()) + flood()
+    return (match(srcmac=EthAddr('3a:c3:ae:16:29:d3')) >> dpi()) + flood()
 

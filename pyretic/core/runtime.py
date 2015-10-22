@@ -149,7 +149,7 @@ class Runtime(object):
         self.num_packet_ins += 1
         with self.policy_lock:
             pyretic_pkt = self.concrete2pyretic(concrete_pkt)
-            #print "in pyretic packet in" + str(pyretic_pkt)
+
             # find the queries, if any in the policy, that will be evaluated
             queries,pkts = queries_in_eval((set(),{pyretic_pkt}),self.policy)
 
@@ -412,7 +412,6 @@ class Runtime(object):
             concrete_pkt_out = self.pyretic2concrete(pkt_out)
             actions = {}
             header_fields = set(concrete_pkt_out.keys()) | set(concrete_pkt_in.keys())
-            #print header_fields
             for field in header_fields:
                 if field not in native_headers + ['outport']:
                     continue
@@ -433,7 +432,7 @@ class Runtime(object):
             for action_set in action_list:
                 if len(action_set) > 1:
                     return None
-        #print concrete_pred, action_list
+
         return (concrete_pred,0,action_list,self.default_cookie,False)
 
 #########################
@@ -1200,24 +1199,11 @@ class Runtime(object):
 ####################################
 
     def concrete2pyretic(self,raw_pkt):
-        #print "runtime:" + str(raw_pkt)
-        #print get_packet_processor()
         packet = get_packet_processor().unpack(raw_pkt['raw'])
         packet['raw'] = raw_pkt['raw']
         packet['switch'] = raw_pkt['switch']
         packet['inport'] = raw_pkt['inport']
-        #print packet
-        # hacky way
-        '''
-        if packet['ethtype'] == 34525:
-            raw_bytes = [ord(c) for c in packet['raw']]
-            eth_payload_bytes = raw_bytes[packet['header_len']:]
-            packet['nxt'] = eth_payload_bytes[6]
-            if eth_payload_bytes[6] == 58 or eth_payload_bytes[6] == 89:
-                packet['icmpv6_type'] = eth_payload_bytes[40]
-                print "icmpv6 type = %d" % eth_payload_bytes[40]
-        '''
-        #print type(packet)
+
         def convert(h,val):
             if h in ['srcmac','dstmac']:
                 return MAC(val)
@@ -1227,7 +1213,6 @@ class Runtime(object):
                 return val
 
         pyretic_packet = Packet(util.frozendict())
-
         d = { h : convert(h,v) for (h,v) in packet.items() }
         return pyretic_packet.modifymany(d)
 
@@ -1245,7 +1230,6 @@ class Runtime(object):
         for header in native_headers + content_headers:
             try:
                 concrete_packet[header] = packet[header]
-                #print "packet[" + str(header) + "] =" + str(packet[header])
             except KeyError:
                 pass
         for header in packet.header:

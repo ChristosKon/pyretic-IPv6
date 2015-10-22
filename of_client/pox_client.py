@@ -344,17 +344,10 @@ class POXClient(revent.EventMixin):
                 match.dl_vlan_pcp = pred['vlan_pcp']
             if 'protocol' in pred:
                 match.nw_proto = pred['protocol']
-            #nicira exception to prevent lldp error in ipv6
             if 'srcip' in pred:
-                try:
-                    match.set_nw_src(pred['srcip'])
-                except:
-                    nx.nx_match.ipv6_src = (pred['srcip'])
+                match.set_nw_src(pred['srcip'])
             if 'dstip' in pred:
-                try:
-                    match.set_nw_dst(pred['dstip'])
-                except:
-                    nx.nx_match.ipv6_dst = (pred['dstip'])
+                match.set_nw_dst(pred['dstip'])
             if 'tos' in pred:
                 match.nw_tos = pred['tos']
             if 'srcport' in pred:
@@ -761,6 +754,7 @@ class POXClient(revent.EventMixin):
         self.send_to_pyretic(['packet',received])
 
     def _handle_PacketIn(self, event):
+        print "PacketIn"
         packet = event.parsed
         #print ("Packet in with %s", packet.type)
         if packet.type == ethernet.LLDP_TYPE: 

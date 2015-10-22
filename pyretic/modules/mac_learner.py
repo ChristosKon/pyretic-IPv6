@@ -51,8 +51,7 @@ class mac_learner(DynamicPolicy):
         self.set_initial_state()
 
     def set_initial_state(self):
-        print "before mac_learner query"
-        self.query = packets(1,['srcip','switch'])
+        self.query = packets(1,['srcmac','switch'])
         self.query.register_callback(self.learn_new_MAC)
         self.forward = self.flood  # REUSE A SINGLE FLOOD INSTANCE
         self.update_policy()
@@ -66,14 +65,12 @@ class mac_learner(DynamicPolicy):
 
     def learn_new_MAC(self,pkt):
         """Update forward policy based on newly seen (mac,port)"""
-        print "before new forward policy"
-        self.forward = if_(match(dstip=pkt['srcip'],
+        self.forward = if_(match(dstmac=pkt['srcmac'],
                                 switch=pkt['switch']),
                           fwd(pkt['inport']),
-                          self.forward)
+                          self.forward) 
         self.update_policy()
        
 
 def main():
     return mac_learner()
-    #(match(icmpv6_type=135) | match(icmpv6_type=136)| match(icmpv6_type=128) | match(icmpv6_type=129)) >>
