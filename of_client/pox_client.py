@@ -324,6 +324,10 @@ class POXClient(revent.EventMixin):
                 match.ipv6_dst = (pred['dstip'])
             if 'tos' in pred:
                 match.ip_tos = pred['tos']
+            if 'nxt' in pred:
+                match.nxt = pred['nxt']
+            if 'icmpv6_type' in pred:
+                match.icmpv6_type = pred['icmpv6_type']
             #Add udp_src and udp_dst cases in the future
             if 'srcport' in pred:
                 match.tcp_src = pred['srcport']

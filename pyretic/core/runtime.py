@@ -1208,15 +1208,13 @@ class Runtime(object):
         packet['inport'] = raw_pkt['inport']
         #print packet
         # hacky way
-        '''
         if packet['ethtype'] == 34525:
             raw_bytes = [ord(c) for c in packet['raw']]
             eth_payload_bytes = raw_bytes[packet['header_len']:]
             packet['nxt'] = eth_payload_bytes[6]
             if eth_payload_bytes[6] == 58 or eth_payload_bytes[6] == 89:
-                packet['icmpv6_type'] = eth_payload_bytes[40]
-                print "icmpv6 type = %d" % eth_payload_bytes[40]
-        '''
+               packet['icmpv6_type'] = eth_payload_bytes[40]
+               # print "icmpv6 type = %d" % eth_payload_bytes[40]
         #print type(packet)
         def convert(h,val):
             if h in ['srcmac','dstmac']:
@@ -1516,7 +1514,7 @@ class ConcreteNetwork(Network):
         self.log = logging.getLogger('%s.ConcreteNetwork' % __name__)
         self.debug_log = logging.getLogger('%s.DEBUG_TOPO_DISCOVERY' % __name__)
         self.debug_log.setLevel(logging.DEBUG)
-
+        self.something = []
     def inject_packet(self, pkt):
         concrete_pkt = self.runtime.pyretic2concrete(pkt)
         self.runtime.send_packet(concrete_pkt)
@@ -1545,6 +1543,7 @@ class ConcreteNetwork(Network):
            
     def inject_discovery_packet(self, dpid, port_no):
         self.runtime.inject_discovery_packet(dpid, port_no)
+        self.something = [dpid,port_no]
         
     def handle_switch_join(self, switch):
         self.debug_log.debug("handle_switch_joins")

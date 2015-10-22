@@ -32,7 +32,7 @@ import socket
 import struct
 from bitarray import bitarray
 import networkx as nx
-from pox.lib.packet.ipv6 import ipv6
+#from pox.lib.packet.ipv6 import ipv6
 
 from pyretic.core import util
 
